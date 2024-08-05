@@ -1,6 +1,35 @@
 # OpenFGA Authorization Plugin for Apache APISIX
 
-This plugin integrates [OpenFGA](https://openfga.dev/) (Fine-Grained Authorization) with [Apache APISIX](https://apisix.apache.org/), allowing you to implement fine-grained authorization checks in your API gateway.
+This plugin integrates [OpenFGA](https://openfga.dev/) (Fine-Grained Authorization) with [Apache APISIX](https://apisix.apache.org/), enabling fine-grained authorization checks directly in your API gateway.
+
+## Table of Contents
+
+- [Why This Plugin?](#why-this-plugin)
+- [How It Works](#how-it-works)
+- [Features](#features)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Performance Considerations](#performance-considerations)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Why This Plugin?
+
+Modern applications require sophisticated authorization systems that can handle complex access control scenarios. While Apache APISIX provides excellent API gateway capabilities, it lacks native support for fine-grained authorization. OpenFGA fills this gap with its powerful authorization model based on Google's Zanzibar paper.
+
+This plugin bridges the gap between Apache APISIX and OpenFGA, allowing you to:
+
+1. Implement fine-grained access control at the API gateway level
+2. Centralize authorization logic, reducing duplication across microservices
+3. Easily manage and update access control policies without changing application code
+4. Scale authorization checks efficiently, leveraging OpenFGA's performance
+
+## How It Works
+
+Here's a high-level overview of how the plugin integrates Apache APISIX with OpenFGA:
+
+![APISIX OpenFGA Plugin Sequence Diagram](<assets/APISIX OpenFGA Plugin Sequence Diagram.png>)
 
 ## Features
 
@@ -17,7 +46,7 @@ This plugin integrates [OpenFGA](https://openfga.dev/) (Fine-Grained Authorizati
 1. Clone this repository into the `apisix/plugins` directory of your Apache APISIX installation:
 
    ```
-   git clone https://github.com/k-kahraman/apisix-openfga-authz-plugin.git /path/to/apisix/plugins/openfga_authz
+   git clone https://github.com/yourusername/apisix-openfga-plugin.git /path/to/apisix/plugins/openfga_authz
    ```
 
 2. Add the plugin name to your APISIX configuration file (`config.yaml`):
@@ -66,6 +95,18 @@ curl -H "X-User-ID: user:alice" http://your-apisix-instance/api/v1/documents/123
 
 This request will be allowed only if the user "alice" has "reader" access to the document with ID "123" in your OpenFGA store.
 
+## Performance Considerations
+
+The plugin is designed with performance in mind, implementing several optimizations:
+
+1. **Caching**: Authorization decisions are cached to reduce latency and load on the OpenFGA server.
+2. **Connection pooling**: The plugin maintains a pool of connections to OpenFGA for efficient communication.
+3. **Asynchronous processing**: Authorization checks are performed asynchronously to minimize blocking.
+
+Here's a diagram illustrating the caching mechanism:
+
+![APISIX OpenFGA Plugin Sequence Diagram with Caching](<assets/APISIX OpenFGA Plugin Sequence Diagram with Caching.png>)
+
 ## Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on how to submit pull requests, report issues, or request features.
@@ -73,7 +114,3 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 ## License
 
 This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
-
-## Support
-
-For questions, feature requests, or bug reports, please open an issue on our GitHub repository. For further assist feel free to contact me at kaan@kahraman.io
