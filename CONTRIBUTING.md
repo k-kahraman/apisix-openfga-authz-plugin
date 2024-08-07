@@ -37,8 +37,7 @@ We welcome contributions to the OpenFGA Authorization Plugin for Apache APISIX! 
 
 ## Testing
 
-- Add unit tests for new functionality.
-- Ensure all existing tests pass before submitting a pull request.
+- Integration test with APISIX Docker **WIP**
 
 ## Reporting Issues
 

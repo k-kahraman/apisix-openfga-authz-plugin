@@ -46,7 +46,7 @@ Here's a high-level overview of how the plugin integrates Apache APISIX with Ope
 1. Clone this repository into the `apisix/plugins` directory of your Apache APISIX installation:
 
    ```
-   git clone https://github.com/yourusername/apisix-openfga-plugin.git /path/to/apisix/plugins/openfga_authz
+   git clone https://github.com/k-kahraman/apisix-openfga-authz-plugin.git /path/to/apisix/plugins/openfga_authz
    ```
 
 2. Add the plugin name to your APISIX configuration file (`config.yaml`):

@@ -1,43 +1,12 @@
 local core = require("apisix.core")
 local http = require("resty.http")
-
-local json
-if not _G._TEST_ENV then
-    json = require("cjson")
-else
-    -- Use a simple JSON implementation for testing
-    json = {
-        encode = function(v)
-            if type(v) == "string" then
-                return '"' .. v:gsub('"', '\\"'):gsub("\n", "\\n") .. '"'
-            elseif type(v) == "table" then
-                local parts = {}
-                for k, v in pairs(v) do
-                    table.insert(parts, '"' .. tostring(k) .. '":' .. json.encode(v))
-                end
-                return "{" .. table.concat(parts, ",") .. "}"
-            else
-                return tostring(v)
-            end
-        end,
-        decode = function(s)
-            if s == '{"allowed": true}' then
-                return {allowed = true}
-            elseif s == '{"allowed": false}' then
-                return {allowed = false}
-            else
-                return {}
-            end
-        end
-    }
-end
+local json = require("cjson")
 
 local plugin_name = "openfga_authz"
 
 -- Create a shared dictionary to store dynamic configuration
 local config_dict = ngx.shared.openfga_config
 
--- Function to update dynamic configuration
 local function update_dynamic_config(key, value)
     local ok, err = config_dict:set(key, json.encode(value))
     if not ok then
@@ -45,7 +14,6 @@ local function update_dynamic_config(key, value)
     end
 end
 
--- Function to get dynamic configuration
 local function get_dynamic_config(key)
     local value, err = config_dict:get(key)
     if not value then
@@ -106,6 +74,7 @@ local lrucache = core.lrucache.new({
 
 function _M.get_resource_info(uri, method, conf, ctx)
     for _, mapping in ipairs(conf.resource_mappings) do
+        -- Match using regex
         if ngx.re.match(uri, mapping.uri_pattern, "jo") then
             local resource_id
             if mapping.id_location == "last_part" then
